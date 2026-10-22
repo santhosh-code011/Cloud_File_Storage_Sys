@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkyVault | Cloud-Based File Storage & Sharing System</title>
+  <meta name="description" content="Secure, fast, and modern cloud-based file storage and sharing system with robust authentication, role permissions, and public link generation.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="dark-theme">
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- AUTHENTICATION VIEW -->
+  <section id="authSection" class="auth-wrapper">
+    <div class="auth-bg-glow"></div>
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="brand-badge">
+          <i data-lucide="cloud" class="brand-icon"></i>
+          <span>SkyVault Cloud</span>
+        </div>
+        <h1 id="authTitle">Welcome to SkyVault</h1>
+        <p id="authSubtitle">Secure Cloud File Storage & Sharing Infrastructure</p>
+      </div>
+
+      <!-- Quick Demo Login Buttons for Evaluator / Teacher -->
+      <div class="demo-box">
+        <span class="demo-label"><i data-lucide="zap"></i> Quick Academic Evaluation:</span>
+        <div class="demo-btn-group">
+          <button type="button" class="btn-demo" id="demoAliceBtn">
+            <span class="avatar-dot alice"></span> Log in as Alice (alice@cloud.io)
+          </button>
+          <button type="button" class="btn-demo" id="demoBobBtn">
+            <span class="avatar-dot bob"></span> Log in as Bob (bob@cloud.io)
+          </button>
+        </div>
+      </div>
+
+      <div class="auth-tabs">
+        <button type="button" id="tabLogin" class="auth-tab active">Sign In</button>
+        <button type="button" id="tabRegister" class="auth-tab">Create Account</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" class="auth-form active">
+        <div class="input-group">
+          <label for="loginEmail">Email Address</label>
+          <div class="input-field">
+            <i data-lucide="mail"></i>
+            <input type="email" id="loginEmail" placeholder="e.g. alice@cloud.io" required>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="loginPassword">Password</label>
+          <div class="input-field">
+            <i data-lucide="lock"></i>
+            <input type="password" id="loginPassword" placeholder="Enter your password" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">
+          <span>Sign In to Cloud</span>
+          <i data-lucide="arrow-right"></i>
+        </button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="registerForm" class="auth-form">
+        <div class="input-group">
+          <label for="regName">Full Name</label>
+          <div class="input-field">
+            <i data-lucide="user"></i>
+            <input type="text" id="regName" placeholder="e.g. John Doe" required>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="regEmail">Email Address</label>
+          <div class="input-field">
+            <i data-lucide="mail"></i>
+            <input type="email" id="regEmail" placeholder="e.g. john@cloud.io" required>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="regPassword">Password (Min 6 characters)</label>
+          <div class="input-field">
+            <i data-lucide="lock"></i>
+            <input type="password" id="regPassword" placeholder="Create strong password" minlength="6" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">
+          <span>Create My Cloud Account</span>
+          <i data-lucide="user-plus"></i>
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <div class="security-tag">
+          <i data-lucide="shield-check"></i>
+          <span>Protected with Scrypt Cryptography & Signed Tokens</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CLOUD APPLICATION VIEW -->
+  <div id="appContainer" class="app-layout hidden">
+    
+    <!-- Top Header Navigation -->
+    <header class="app-header">
+      <div class="header-left">
+        <button id="mobileSidebarToggle" class="icon-btn mobile-only" aria-label="Toggle Menu">
+          <i data-lucide="menu"></i>
+        </button>
+        <div class="brand">
+          <div class="brand-icon-wrapper">
+            <i data-lucide="cloud"></i>
+          </div>
+          <div class="brand-text">
+            <h2>SkyVault</h2>
+            <span class="badge-status">Cloud Drive</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="header-search">
+        <i data-lucide="search" class="search-icon"></i>
+        <input type="text" id="searchInput" placeholder="Search files by name, type, or tags... (Ctrl + K)">
+        <span class="search-kbd">⌘K</span>
+      </div>
+
+      <!-- Header Right (Theme & Profile) -->
+      <div class="header-right">
+        <button id="themeToggleBtn" class="icon-btn" title="Toggle Light/Dark Theme">
+          <i data-lucide="sun" id="themeIcon"></i>
+        </button>
+        
+        <div class="user-profile-menu">
+          <div class="profile-avatar" id="userAvatar">A</div>
+          <div class="profile-info">
+            <span class="profile-name" id="userNameDisplay">Alice Smith</span>
+            <span class="profile-email" id="userEmailDisplay">alice@cloud.io</span>
+          </div>
+          <button id="logoutBtn" class="icon-btn logout-btn" title="Log Out">
+            <i data-lucide="log-out"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="app-body">
+      <!-- Left Sidebar -->
+      <aside class="app-sidebar" id="appSidebar">
+        <!-- Main Upload Action -->
+        <div class="sidebar-action">
+          <label for="fileUploadInput" class="btn btn-upload">
+            <i data-lucide="upload-cloud"></i>
+            <span>Upload New File</span>
+          </label>
+          <input type="file" id="fileUploadInput" class="sr-only">
+        </div>
+
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar-nav">
+          <button class="nav-item active" data-view="my-files">
+            <i data-lucide="folder"></i>
+            <span>My Cloud Files</span>
+            <span class="nav-badge" id="myFilesCount">0</span>
+          </button>
+
+          <button class="nav-item" data-view="shared-with-me">
+            <i data-lucide="users"></i>
+            <span>Shared with Me</span>
+            <span class="nav-badge share-badge" id="sharedFilesCount">0</span>
+          </button>
+
+          <button class="nav-item" data-view="starred">
+            <i data-lucide="star"></i>
+            <span>Starred Files</span>
+            <span class="nav-badge" id="starredCount">0</span>
+          </button>
+
+          <button class="nav-item" data-view="activity">
+            <i data-lucide="activity"></i>
+            <span>Audit Activity Log</span>
+          </button>
+        </nav>
+
+        <!-- Storage Quota Widget -->
+        <div class="storage-widget">
+          <div class="storage-widget-header">
+            <div class="storage-icon-box">
+              <i data-lucide="hard-drive"></i>
+            </div>
+            <div>
+              <span class="storage-title">Storage Quota</span>
+              <span class="storage-percent" id="storagePercentText">0% Used</span>
+            </div>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="storageProgressFill" style="width: 0%;"></div>
+          </div>
+          <div class="storage-details">
+            <span id="storageUsedText">0 MB</span>
+            <span>of <strong id="storageTotalText">100 MB</strong></span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="app-main">
+        
+        <!-- View Header & Controls -->
+        <div class="content-toolbar">
+          <div class="toolbar-left">
+            <h1 class="page-title" id="currentViewTitle">My Cloud Files</h1>
+            <p class="page-subtitle" id="currentViewDesc">All files stored securely in your private cloud partition</p>
+          </div>
+
+          <div class="toolbar-right">
+            <!-- Filter Categories -->
+            <div class="filter-chips" id="filterChips">
+              <button class="chip active" data-filter="all">All</button>
+              <button class="chip" data-filter="document">Docs</button>
+              <button class="chip" data-filter="image">Images</button>
+              <button class="chip" data-filter="media">Media</button>
+              <button class="chip" data-filter="code">Code & Zip</button>
+            </div>
+
+            <!-- Sort Dropdown -->
+            <div class="sort-selector">
+              <i data-lucide="arrow-up-down"></i>
+              <select id="sortSelect">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="largest">Size: High to Low</option>
+                <option value="smallest">Size: Low to High</option>
+                <option value="name_asc">Name (A-Z)</option>
+              </select>
+            </div>
+
+            <!-- Grid / List Switcher -->
+            <div class="view-switchers">
+              <button id="viewGridBtn" class="view-btn active" title="Grid View">
+                <i data-lucide="layout-grid"></i>
+              </button>
+              <button id="viewListBtn" class="view-btn" title="List View">
+                <i data-lucide="list"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Drag & Drop Zone -->
+        <div id="dropZone" class="upload-dropzone">
+          <div class="dropzone-content">
+            <div class="drop-icon-anim">
+              <i data-lucide="cloud-arrow-up"></i>
+            </div>
+            <h3>Drag & Drop files here</h3>
+            <p>or <label for="fileUploadInput" class="dropzone-browse">browse from computer</label> (Up to 100 MB per file)</p>
+          </div>
+        </div>
+
+        <!-- Active Upload Progress Card (hidden by default) -->
+        <div id="uploadProgressCard" class="upload-progress-card hidden">
+          <div class="progress-info">
+            <div class="progress-left">
+              <i data-lucide="file-up" class="progress-icon spin"></i>
+              <div>
+                <strong id="uploadFileName">Uploading file...</strong>
+                <span id="uploadFileSize">0 KB</span>
+              </div>
+            </div>
+            <span id="uploadPercent">0%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div id="uploadProgressBar" class="progress-bar-fill progress-animated" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- Files Container (Grid or List) -->
+        <div id="filesContainer" class="files-grid">
+          <!-- Dynamically populated via app.js -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state hidden">
+          <div class="empty-icon-wrap">
+            <i data-lucide="folder-open"></i>
+          </div>
+          <h3>No files found</h3>
+          <p id="emptyStateDesc">Upload your first document, image, or archive to start storing securely.</p>
+        </div>
+
+        <!-- Audit Activity Log View Container (hidden by default) -->
+        <div id="activitySection" class="activity-section hidden">
+          <div class="activity-timeline" id="activityList">
+            <!-- Dynamically populated via app.js -->
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- MODAL: FILE PREVIEW -->
+  <div id="previewModal" class="modal-overlay hidden">
+    <div class="modal-card modal-large">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <i data-lucide="file-text" id="previewFileIcon"></i>
+          <h3 id="previewFileName">File Preview</h3>
+        </div>
+        <div class="modal-actions">
+          <a id="previewDownloadBtn" class="btn btn-outline btn-sm" href="#" download>
+            <i data-lucide="download"></i> Download
+          </a>
+          <button class="modal-close" id="closePreviewBtn">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+      </div>
+      <div class="modal-body preview-body" id="previewContent">
+        <!-- Render image, audio, video, text or fallback -->
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: FILE SHARING & COLLABORATION -->
+  <div id="shareModal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <i data-lucide="share-2"></i>
+          <div>
+            <h3>Share File</h3>
+            <p id="shareFileSubtitle" class="modal-sub">Configuring access for report.pdf</p>
+          </div>
+        </div>
+        <button class="modal-close" id="closeShareBtn">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="share-tabs">
+          <button type="button" class="share-tab active" data-tab="direct">Direct User Share</button>
+          <button type="button" class="share-tab" data-tab="public">Public Web Link</button>
+        </div>
+
+        <!-- Direct Share Form -->
+        <div id="directSharePanel" class="share-panel active">
+          <form id="directShareForm">
+            <div class="input-group">
+              <label for="shareUserEmail">Recipient Email Address</label>
+              <div class="input-field">
+                <i data-lucide="mail"></i>
+                <input type="email" id="shareUserEmail" placeholder="e.g. bob@cloud.io" required>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="sharePermission">Permission Level</label>
+              <select id="sharePermission" class="custom-select">
+                <option value="download">Can Download & View</option>
+                <option value="view">View Only (Restricted Download)</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+              <i data-lucide="user-plus"></i> Share with User
+            </button>
+          </form>
+
+          <div class="active-shares-box">
+            <h4>Existing Access Permissions</h4>
+            <div id="activeSharesList" class="shares-list">
+              <!-- Render active shares -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Public Share Panel -->
+        <div id="publicSharePanel" class="share-panel">
+          <p class="public-desc">Anyone with this link can view or download the file based on the rules configured below.</p>
+          
+          <div class="input-group">
+            <label for="publicExpireSelect">Link Expiration</label>
+            <select id="publicExpireSelect" class="custom-select">
+              <option value="0">Never Expires</option>
+              <option value="24">Expires in 24 Hours</option>
+              <option value="168">Expires in 7 Days</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label for="publicPassword">Optional Passcode Protection</label>
+            <div class="input-field">
+              <i data-lucide="key"></i>
+              <input type="password" id="publicPassword" placeholder="Leave empty for open access">
+            </div>
+          </div>
+
+          <button type="button" id="generatePublicLinkBtn" class="btn btn-primary btn-block">
+            <i data-lucide="link"></i> Generate Secure Link
+          </button>
+
+          <!-- Generated Link Display -->
+          <div id="generatedLinkContainer" class="generated-link-box hidden">
+            <label>Shareable Public URL:</label>
+            <div class="copy-input-group">
+              <input type="text" id="publicLinkInput" readonly>
+              <button type="button" id="copyPublicLinkBtn" class="btn btn-secondary">
+                <i data-lucide="copy"></i> Copy
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PUBLIC SHARE GUEST ACCESS (When visiting /#share/token) -->
+  <div id="publicGuestModal" class="modal-overlay hidden">
+    <div class="modal-card public-guest-card">
+      <div class="public-guest-badge">
+        <i data-lucide="cloud"></i>
+        <span>SkyVault Shared Cloud Resource</span>
+      </div>
+      <div class="file-icon-giant" id="guestFileIcon">
+        <i data-lucide="file"></i>
+      </div>
+      <h2 id="guestFileName">SharedDocument.pdf</h2>
+      <div class="guest-meta">
+        <span id="guestFileSize">2.4 MB</span> • 
+        <span>Shared by <strong id="guestOwnerName">Alice</strong></span>
+      </div>
+
+      <!-- Password Prompt if file is locked -->
+      <div id="guestPasswordGroup" class="guest-pass-group hidden">
+        <p class="pass-notice"><i data-lucide="lock"></i> This cloud link is password protected</p>
+        <div class="input-field">
+          <input type="password" id="guestPasswordInput" placeholder="Enter link passcode">
+        </div>
+      </div>
+
+      <div class="guest-buttons">
+        <button id="guestPreviewBtn" class="btn btn-outline">
+          <i data-lucide="eye"></i> Preview File
+        </button>
+        <button id="guestDownloadBtn" class="btn btn-primary">
+          <i data-lucide="download"></i> Download File
+        </button>
+      </div>
+
+      <a href="/" class="guest-home-link">Access SkyVault Cloud Drive</a>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

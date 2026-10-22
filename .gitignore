@@ -1,0 +1,8 @@
+node_modules/
+cloud_storage.db
+cloud_storage.db-wal
+cloud_storage.db-shm
+uploads/*
+!uploads/.gitkeep
+.env
+.DS_Store
